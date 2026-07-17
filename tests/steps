@@ -1,0 +1,98 @@
+                  Developer
+                      │
+                git push origin main
+                      │
+                      ▼
+             GitHub Repository
+                      │
+                      ▼
+         GitHub Actions (CI Pipeline)
+                      │
+      ┌───────────────┼────────────────┐
+      │               │                │
+      ▼               ▼                ▼
+ Code Format      Unit Tests      Smoke Training
+      │               │                │
+      └───────────────┼────────────────┘
+                      ▼
+               Full Model Training
+                      │
+                      ▼
+              Model Evaluation
+                      │
+         Better than Production?
+                /             \
+              No               Yes
+              │                 │
+         Stop Pipeline      Save model.pt
+                                │
+                                ▼
+                        Build Docker Image
+                                │
+                                ▼
+                       Push to Registry
+                                │
+                                ▼
+                      Deploy FastAPI Server
+                                │
+                                ▼
+                          Health Checks
+                                │
+                                ▼
+                           Production API
+                                │
+                                ▼
+                         Monitor & Alert
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Current
+    │
+    ▼
+Finish Training
+    │
+    ▼
+Evaluate Model
+    │
+    ▼
+Phase 4
+pytest
+    │
+    ▼
+Phase 5
+Black + Ruff
+    │
+    ▼
+Phase 6
+GitHub Actions
+    │
+    ▼
+Phase 7
+Smoke Training
+    │
+    ▼
+Phase 8
+MLflow
+    │
+    ▼
+Phase 9
+FastAPI
+    │
+    ▼
+Phase 10
+Docker
