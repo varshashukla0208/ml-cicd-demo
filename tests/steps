@@ -96,3 +96,16 @@ FastAPI
     ▼
 Phase 10
 Docker
+
+
+
+| Command                                            | Meaning                                  |
+| -------------------------------------------------- | ---------------------------------------- |
+| `pytest`                                           | Run all tests with minimal output        |
+| `pytest -v`                                        | Verbose output (recommended for CI)      |
+| `pytest -q`                                        | Quiet output (less information)          |
+| `pytest -x`                                        | Stop after the first failure             |
+| `pytest -k train`                                  | Run only tests whose names match `train` |
+| `pytest tests/test_model.py`                       | Run one specific test file               |
+| `pytest tests/test_model.py -v`                    | Run one file with verbose output         |
+| `pytest tests/test_model.py::test_forward_pass -v` | Run one specific test function           |

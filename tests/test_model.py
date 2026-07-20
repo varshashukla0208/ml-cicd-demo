@@ -18,7 +18,8 @@ def test_model_created(model):
 
     assert model is not None
 
-    assert isinstance(model, SimpleCNN)
+    #assert isinstance(model, SimpleCNN)
+    assert 2 == 3 # intentionally failing it
 
 
 # ---------------------------------------------------------
