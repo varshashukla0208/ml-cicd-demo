@@ -40,5 +40,5 @@ logging:
 
 smoke:
   enabled: true
-  max_train_batches: 5
-  max_validation_batches: 2
+  train_batches: 5
+  val_batches: 2
