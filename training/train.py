@@ -18,6 +18,7 @@ from __future__ import annotations
 import os
 import random
 from pathlib import Path
+import argparse
 
 import yaml
 import numpy as np
@@ -305,6 +306,7 @@ def train_one_epoch(
     criterion: nn.Module,
     optimizer: optim.Optimizer,
     device: torch.device,
+    config,
 ):
     """
     Train the model for one epoch.
@@ -336,6 +338,14 @@ def train_one_epoch(
     # Switch model to training mode
     # -----------------------------------------
     model.train()
+    # -----------------------------------------
+    # Smoke Training Configuration
+    # -----------------------------------------
+
+    smoke_enabled = config["smoke"]["enabled"]
+
+    max_train_batches = config["smoke"]["max_train_batches"]
+    
 
     # -----------------------------------------
     # Running statistics
@@ -349,7 +359,20 @@ def train_one_epoch(
     # -----------------------------------------
     # Iterate over training batches
     # -----------------------------------------
-    for images, labels in dataloader:
+    for batch_idx, (images, labels) in enumerate(dataloader):
+
+        # -----------------------------------------
+        # Smoke Training
+        # -----------------------------------------
+
+        if smoke_enabled and batch_idx >= max_train_batches:
+
+            print(
+                f"Smoke mode: stopping training after "
+                f"{max_train_batches} batches."
+            )
+
+            break
 
         # Move data to selected device
         images = images.to(device)
@@ -408,6 +431,7 @@ def validate_one_epoch(
     dataloader,
     criterion: nn.Module,
     device: torch.device,
+    config,
 ):
     """
     Validate model for one epoch.
@@ -438,6 +462,14 @@ def validate_one_epoch(
 
     model.eval()
 
+    # -----------------------------------------
+    # Smoke Training Configuration
+    # -----------------------------------------
+
+    smoke_enabled = config["smoke"]["enabled"]
+
+    max_validation_batches = config["smoke"]["max_validation_batches"]
+
     running_loss = 0.0
 
     correct_predictions = 0
@@ -450,7 +482,16 @@ def validate_one_epoch(
 
     with torch.no_grad():
 
-        for images, labels in dataloader:
+        for batch_idx, (images, labels) in enumerate(dataloader):
+
+            if smoke_enabled and batch_idx >= max_validation_batches:
+
+                print(
+                    f"Smoke mode: stopping validation after "
+                    f"{max_validation_batches} batches."
+                )
+
+                break
 
             images = images.to(device)
 
@@ -501,7 +542,9 @@ def main():
     # Load Configuration
     # ---------------------------------------------------
 
-    config = load_config()
+    args = parse_arguments()
+
+    config = load_config(args.config)
 
     # ---------------------------------------------------
     # Set Random Seed
@@ -540,6 +583,8 @@ def main():
     ) = dataset.create_dataloaders()
 
     print(f"Classes : {class_names}")
+    print(f"Training batches   : {len(train_loader)}")
+    print(f"Validation batches : {len(validation_loader)}")
 
     # ---------------------------------------------------
     # Model
@@ -655,6 +700,7 @@ def main():
             criterion=criterion,
             optimizer=optimizer,
             device=device,
+            config=config,
         )
 
         validation_metrics = validate_one_epoch(
@@ -662,6 +708,7 @@ def main():
             dataloader=validation_loader,
             criterion=criterion,
             device=device,
+            config=config,
         )
 
         # ---------------------------------------------
@@ -768,6 +815,24 @@ def main():
     )
 
     return history
+
+def parse_arguments():
+    """
+    Parse command-line arguments.
+    """
+
+    parser = argparse.ArgumentParser(
+        description="Production Training Pipeline"
+    )
+
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="configs/config.yaml",
+        help="Path to configuration file",
+    )
+
+    return parser.parse_args()
 
 if __name__ == "__main__":
 

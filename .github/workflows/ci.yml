@@ -23,6 +23,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
 
       - name: Install Dependencies
         run: |
@@ -32,3 +33,7 @@ jobs:
       - name: Run Pytest
         run: |
           pytest -v
+
+      - name: Run Smoke Training
+        run: |
+          python -m training.train --config configs/smoke_train.yaml

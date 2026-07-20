@@ -1,3 +1,25 @@
+Phase 0 : Prerequisites
+Phase 1 : Create Project & Git Repository
+Phase 2 : Python Environment & Dependency Management
+Phase 3 : Build a Simple ML Project
+Phase 4 : Unit Testing (pytest)
+Phase 5 : Code Formatting & Linting (Black + Ruff)
+Phase 6 : GitHub Actions CI
+Phase 7 : Smoke Training
+Phase 8 : Full Training Pipeline
+Phase 9 : Save Model Artifacts
+Phase 10 : Docker
+Phase 11 : FastAPI Inference
+Phase 12 : Docker Compose
+Phase 13 : MLflow
+Phase 14 : Model Registry
+Phase 15 : CD Pipeline
+Phase 16 : Monitoring (Prometheus + Grafana)
+Phase 17 : Kubernetes (Optional)
+
+
+
+
                   Developer
                       │
                 git push origin main
