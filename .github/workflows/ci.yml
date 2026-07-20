@@ -38,7 +38,7 @@ jobs:
         run: |
           python -m training.train --config configs/smoke_train.yaml
 
-            - name: Build Docker Image
+      - name: Build Docker Image
         run: |
           docker build -t practice-ci-cd .
 
