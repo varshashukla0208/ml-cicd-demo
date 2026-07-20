@@ -341,10 +341,12 @@ def train_one_epoch(
     # -----------------------------------------
     # Smoke Training Configuration
     # -----------------------------------------
+    
+    smoke_config = config.get("smoke", {})
 
-    smoke_enabled = config["smoke"]["enabled"]
-
-    max_train_batches = config["smoke"]["max_train_batches"]
+    smoke_enabled = smoke_config.get("enabled", False)
+    train_batches = smoke_config.get("train_batches", 0)
+    val_batches = smoke_config.get("val_batches", 0)
     
 
     # -----------------------------------------
@@ -365,11 +367,10 @@ def train_one_epoch(
         # Smoke Training
         # -----------------------------------------
 
-        if smoke_enabled and batch_idx >= max_train_batches:
-
+        if smoke_enabled and batch_idx + 1 >= train_batches:
             print(
                 f"Smoke mode: stopping training after "
-                f"{max_train_batches} batches."
+                f"{train_batches} batches."
             )
 
             break
@@ -466,9 +467,10 @@ def validate_one_epoch(
     # Smoke Training Configuration
     # -----------------------------------------
 
-    smoke_enabled = config["smoke"]["enabled"]
+    smoke_config = config.get("smoke", {})
 
-    max_validation_batches = config["smoke"]["max_validation_batches"]
+    smoke_enabled = smoke_config.get("enabled", False)
+    val_batches = smoke_config.get("val_batches", 0)
 
     running_loss = 0.0
 
@@ -484,13 +486,10 @@ def validate_one_epoch(
 
         for batch_idx, (images, labels) in enumerate(dataloader):
 
-            if smoke_enabled and batch_idx >= max_validation_batches:
-
+            if smoke_enabled and batch_idx + 1 >= val_batches:
                 print(
-                    f"Smoke mode: stopping validation after "
-                    f"{max_validation_batches} batches."
+                    f"Smoke mode enabled. Stopping after {val_batches} batches."
                 )
-
                 break
 
             images = images.to(device)

@@ -101,6 +101,7 @@ def test_train_one_epoch(
         criterion=criterion,
         optimizer=optimizer,
         device=device,
+        config=config,
     )
 
     assert isinstance(metrics, dict)
@@ -139,6 +140,7 @@ def test_train_loss_positive(
         criterion=criterion,
         optimizer=optimizer,
         device=device,
+        config=config,
     )
 
     assert metrics["loss"] >= 0
@@ -174,6 +176,7 @@ def test_train_accuracy_range(
         criterion=criterion,
         optimizer=optimizer,
         device=device,
+        config=config,
     )
 
     assert 0 <= metrics["accuracy"] <= 100
@@ -202,6 +205,7 @@ def test_validate_one_epoch(
         dataloader=validation_loader,
         criterion=criterion,
         device=device,
+        config=config,
     )
 
     assert isinstance(metrics, dict)
@@ -234,6 +238,7 @@ def test_validation_loss_positive(
         dataloader=validation_loader,
         criterion=criterion,
         device=device,
+        config=config,
     )
 
     assert metrics["loss"] >= 0
@@ -263,6 +268,7 @@ def test_validation_accuracy_range(
         dataloader=validation_loader,
         criterion=criterion,
         device=device,
+        config=config,
     )
 
     assert 0 <= metrics["accuracy"] <= 100
@@ -302,6 +308,7 @@ def test_parameters_updated(
         criterion=criterion,
         optimizer=optimizer,
         device=device,
+        config=config,
     )
 
     after = model.state_dict()
@@ -367,6 +374,7 @@ def test_model_train_mode(
         criterion=criterion,
         optimizer=optimizer,
         device=device,
+        config=config,
     )
 
     assert model.training
@@ -396,6 +404,7 @@ def test_model_eval_mode(
         dataloader=validation_loader,
         criterion=criterion,
         device=device,
+        config=config,
     )
 
     assert model.training is False
