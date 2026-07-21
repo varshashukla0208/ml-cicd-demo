@@ -42,11 +42,7 @@ def get_device(config: dict) -> torch.device:
 
     if device_name == "auto":
 
-        return torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else "cpu"
-        )
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     return torch.device(device_name)
 
@@ -62,37 +58,25 @@ def load_checkpoint(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     if not checkpoint_path.exists():
 
-        raise FileNotFoundError(
-            f"Checkpoint not found: {checkpoint_path}"
-        )
+        raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
 
     checkpoint = torch.load(
         checkpoint_path,
         map_location=device,
     )
 
-    model.load_state_dict(
-        checkpoint["model_state_dict"]
-    )
+    model.load_state_dict(checkpoint["model_state_dict"])
 
     print("=" * 60)
     print("Checkpoint Loaded")
     print("=" * 60)
     print(f"Path               : {checkpoint_path}")
-    print(
-        f"Saved Epoch        : {checkpoint['epoch']}"
-    )
-    print(
-        f"Validation Accuracy: "
-        f"{checkpoint['validation_accuracy']:.2f}%"
-    )
+    print(f"Saved Epoch        : {checkpoint['epoch']}")
+    print(f"Validation Accuracy: " f"{checkpoint['validation_accuracy']:.2f}%")
 
     return model
 
@@ -129,23 +113,17 @@ def evaluate(
 
             batch_size = labels.size(0)
 
-            running_loss += (
-                loss.item() * batch_size
-            )
+            running_loss += loss.item() * batch_size
 
             predictions = outputs.argmax(dim=1)
 
-            correct_predictions += (
-                predictions == labels
-            ).sum().item()
+            correct_predictions += (predictions == labels).sum().item()
 
             total_samples += batch_size
 
     test_loss = running_loss / total_samples
 
-    test_accuracy = (
-        correct_predictions / total_samples
-    ) * 100
+    test_accuracy = (correct_predictions / total_samples) * 100
 
     metrics = {
         "loss": test_loss,
@@ -202,9 +180,7 @@ def main():
     # Model
     # --------------------------------------------------
 
-    model = SimpleCNN(
-        num_classes=len(class_names)
-    )
+    model = SimpleCNN(num_classes=len(class_names))
 
     model = load_checkpoint(
         model=model,
@@ -239,13 +215,9 @@ def main():
     print("Final Test Results")
     print("=" * 70)
 
-    print(
-        f"Test Loss      : {metrics['loss']:.4f}"
-    )
+    print(f"Test Loss      : {metrics['loss']:.4f}")
 
-    print(
-        f"Test Accuracy  : {metrics['accuracy']:.2f}%"
-    )
+    print(f"Test Accuracy  : {metrics['accuracy']:.2f}%")
 
     print("=" * 70)
 

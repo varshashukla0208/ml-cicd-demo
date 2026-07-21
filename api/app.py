@@ -34,7 +34,6 @@ from configs.settings import settings
 from inference.model_loader import ModelLoader
 from training.train import load_config
 
-
 # ==========================================================
 # Logging
 # ==========================================================
@@ -50,6 +49,7 @@ logger = logging.getLogger(__name__)
 # ==========================================================
 # Application Lifespan
 # ==========================================================
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -99,9 +99,7 @@ async def lifespan(app: FastAPI):
 
     except Exception:
 
-        logger.exception(
-            "Application startup failed."
-        )
+        logger.exception("Application startup failed.")
 
         raise
 

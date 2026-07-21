@@ -15,25 +15,17 @@ class SimpleCNN(nn.Module):
         super().__init__()
 
         self.features = nn.Sequential(
-
             ConvBlock(3, 32),
-
             ConvBlock(32, 64),
-
             ConvBlock(64, 128),
         )
 
         self.classifier = nn.Sequential(
-
             nn.Flatten(),
-
             nn.Linear(128 * 16 * 16, 512),
-
             nn.ReLU(inplace=True),
-
             nn.Dropout(0.5),
-
-            nn.Linear(512, num_classes)
+            nn.Linear(512, num_classes),
         )
 
     def forward(self, x):

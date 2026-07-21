@@ -6,10 +6,10 @@ import torch
 
 from models.cnn import SimpleCNN
 
-
 # ---------------------------------------------------------
 # Model Creation
 # ---------------------------------------------------------
+
 
 def test_model_created(model):
     """
@@ -24,6 +24,7 @@ def test_model_created(model):
 # ---------------------------------------------------------
 # Forward Pass
 # ---------------------------------------------------------
+
 
 def test_forward_pass(model):
     """
@@ -46,6 +47,7 @@ def test_forward_pass(model):
 # Output Shape
 # ---------------------------------------------------------
 
+
 def test_output_shape(model):
     """
     Verify output tensor shape.
@@ -66,6 +68,7 @@ def test_output_shape(model):
 # ---------------------------------------------------------
 # Output Type
 # ---------------------------------------------------------
+
 
 def test_output_dtype(model):
     """
@@ -88,6 +91,7 @@ def test_output_dtype(model):
 # Batch Size Preservation
 # ---------------------------------------------------------
 
+
 def test_batch_size_preserved(model):
     """
     Output batch size should match input.
@@ -108,6 +112,7 @@ def test_batch_size_preserved(model):
 # ---------------------------------------------------------
 # Number of Classes
 # ---------------------------------------------------------
+
 
 def test_number_of_output_classes(model):
     """
@@ -130,15 +135,13 @@ def test_number_of_output_classes(model):
 # Model Parameters
 # ---------------------------------------------------------
 
+
 def test_model_has_parameters(model):
     """
     Verify model contains trainable parameters.
     """
 
-    total_parameters = sum(
-        p.numel()
-        for p in model.parameters()
-    )
+    total_parameters = sum(p.numel() for p in model.parameters())
 
     assert total_parameters > 0
 
@@ -147,20 +150,13 @@ def test_model_has_parameters(model):
 # Trainable Parameters
 # ---------------------------------------------------------
 
+
 def test_trainable_parameters(model):
     """
     Verify parameters require gradients.
     """
 
-    trainable_parameters = sum(
-
-        p.numel()
-
-        for p in model.parameters()
-
-        if p.requires_grad
-
-    )
+    trainable_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
     assert trainable_parameters > 0
 
@@ -168,6 +164,7 @@ def test_trainable_parameters(model):
 # ---------------------------------------------------------
 # Gradient Flow
 # ---------------------------------------------------------
+
 
 def test_backward_pass(model):
     """
@@ -215,6 +212,7 @@ def test_backward_pass(model):
 # Model Training Mode
 # ---------------------------------------------------------
 
+
 def test_model_train_mode(model):
     """
     Verify training mode.
@@ -229,6 +227,7 @@ def test_model_train_mode(model):
 # Model Evaluation Mode
 # ---------------------------------------------------------
 
+
 def test_model_eval_mode(model):
     """
     Verify evaluation mode.
@@ -242,6 +241,7 @@ def test_model_eval_mode(model):
 # ---------------------------------------------------------
 # Inference Without Gradients
 # ---------------------------------------------------------
+
 
 def test_inference_no_grad(model):
     """
@@ -268,6 +268,7 @@ def test_inference_no_grad(model):
 # Output Contains Finite Values
 # ---------------------------------------------------------
 
+
 def test_output_is_finite(model):
     """
     Verify no NaN or Inf values.
@@ -289,13 +290,12 @@ def test_output_is_finite(model):
 # Model on CPU
 # ---------------------------------------------------------
 
+
 def test_model_device_cpu(model):
     """
     Verify model defaults to CPU.
     """
 
-    device = next(
-        model.parameters()
-    ).device
+    device = next(model.parameters()).device
 
     assert device.type == "cpu"

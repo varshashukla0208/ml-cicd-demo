@@ -14,10 +14,10 @@ import torch
 from models.cnn import SimpleCNN
 from training.dataset import DatasetManager
 
-
 # ---------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------
+
 
 @pytest.fixture(scope="session")
 def config():
@@ -39,6 +39,7 @@ def config():
 # Device
 # ---------------------------------------------------------
 
+
 @pytest.fixture(scope="session")
 def device(config):
     """
@@ -49,11 +50,7 @@ def device(config):
 
     if device_name == "auto":
 
-        return torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else "cpu"
-        )
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     return torch.device(device_name)
 
@@ -62,6 +59,7 @@ def device(config):
 # Dataset Manager
 # ---------------------------------------------------------
 
+
 @pytest.fixture(scope="session")
 def dataset_manager(config):
     """
@@ -69,21 +67,17 @@ def dataset_manager(config):
     """
 
     return DatasetManager(
-
         dataset_root=config["dataset"]["root"],
-
         image_size=config["dataset"]["image_size"],
-
         batch_size=config["dataset"]["batch_size"],
-
         num_workers=config["dataset"]["num_workers"],
-
     )
 
 
 # ---------------------------------------------------------
 # Dataloaders
 # ---------------------------------------------------------
+
 
 @pytest.fixture(scope="session")
 def dataloaders(dataset_manager):
@@ -99,6 +93,7 @@ def dataloaders(dataset_manager):
 # Train Loader
 # ---------------------------------------------------------
 
+
 @pytest.fixture(scope="session")
 def train_loader(dataloaders):
 
@@ -110,6 +105,7 @@ def train_loader(dataloaders):
 # ---------------------------------------------------------
 # Validation Loader
 # ---------------------------------------------------------
+
 
 @pytest.fixture(scope="session")
 def validation_loader(dataloaders):
@@ -123,6 +119,7 @@ def validation_loader(dataloaders):
 # Test Loader
 # ---------------------------------------------------------
 
+
 @pytest.fixture(scope="session")
 def test_loader(dataloaders):
 
@@ -134,6 +131,7 @@ def test_loader(dataloaders):
 # ---------------------------------------------------------
 # Class Names
 # ---------------------------------------------------------
+
 
 @pytest.fixture(scope="session")
 def class_names(dataloaders):
@@ -147,6 +145,7 @@ def class_names(dataloaders):
 # Model
 # ---------------------------------------------------------
 
+
 @pytest.fixture
 def model(class_names):
     """
@@ -156,14 +155,13 @@ def model(class_names):
     receives a new model.
     """
 
-    return SimpleCNN(
-        num_classes=len(class_names)
-    )
+    return SimpleCNN(num_classes=len(class_names))
 
 
 # ---------------------------------------------------------
 # Loss Function
 # ---------------------------------------------------------
+
 
 @pytest.fixture
 def criterion():
@@ -175,21 +173,20 @@ def criterion():
 # Optimizer
 # ---------------------------------------------------------
 
+
 @pytest.fixture
 def optimizer(model):
 
     return torch.optim.Adam(
-
         model.parameters(),
-
         lr=0.001,
-
     )
 
 
 # ---------------------------------------------------------
 # Dummy Batch
 # ---------------------------------------------------------
+
 
 @pytest.fixture
 def dummy_batch():

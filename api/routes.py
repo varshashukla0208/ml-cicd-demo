@@ -35,7 +35,6 @@ from api.schemas import (
 
 from inference.predictor import Predictor
 
-
 # ==========================================================
 # Router
 # ==========================================================
@@ -46,6 +45,7 @@ router = APIRouter()
 # ==========================================================
 # Root Endpoint
 # ==========================================================
+
 
 @router.get(
     "/",
@@ -68,6 +68,7 @@ async def root():
 # Health Endpoint
 # ==========================================================
 
+
 @router.get(
     "/health",
     response_model=HealthResponse,
@@ -86,6 +87,7 @@ async def health():
 # ==========================================================
 # Version Endpoint
 # ==========================================================
+
 
 @router.get(
     "/version",
@@ -108,6 +110,7 @@ async def version(
 # ==========================================================
 # Prediction Endpoint
 # ==========================================================
+
 
 @router.post(
     "/predict",
@@ -146,10 +149,7 @@ async def predict(
 
     filename = file.filename.lower()
 
-    if not any(
-        filename.endswith(ext)
-        for ext in allowed_extensions
-    ):
+    if not any(filename.endswith(ext) for ext in allowed_extensions):
 
         raise HTTPException(
             status_code=400,

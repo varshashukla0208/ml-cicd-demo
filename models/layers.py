@@ -15,19 +15,15 @@ class ConvBlock(nn.Module):
         super().__init__()
 
         self.block = nn.Sequential(
-
             nn.Conv2d(
                 in_channels,
                 out_channels,
                 kernel_size=3,
                 padding=1,
             ),
-
             nn.BatchNorm2d(out_channels),
-
             nn.ReLU(inplace=True),
-
-            nn.MaxPool2d(kernel_size=2)
+            nn.MaxPool2d(kernel_size=2),
         )
 
     def forward(self, x):

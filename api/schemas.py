@@ -22,10 +22,10 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-
 # ============================================================
 # Root Response
 # ============================================================
+
 
 class RootResponse(BaseModel):
     """
@@ -65,6 +65,7 @@ class RootResponse(BaseModel):
 # Health Response
 # ============================================================
 
+
 class HealthResponse(BaseModel):
     """
     Health check response.
@@ -95,6 +96,7 @@ class HealthResponse(BaseModel):
 # ============================================================
 # Version Response
 # ============================================================
+
 
 class VersionResponse(BaseModel):
     """
@@ -130,6 +132,7 @@ class VersionResponse(BaseModel):
 # ============================================================
 # Prediction Response
 # ============================================================
+
 
 class PredictionResponse(BaseModel):
     """
@@ -177,6 +180,7 @@ class PredictionResponse(BaseModel):
 # ============================================================
 # Error Response
 # ============================================================
+
 
 class ErrorResponse(BaseModel):
     """

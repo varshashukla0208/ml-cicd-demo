@@ -52,6 +52,7 @@ def load_config(config_path: str = "configs/config.yaml") -> dict:
 
     return config
 
+
 def set_seed(seed: int) -> None:
     """
     Make experiments reproducible.
@@ -70,6 +71,7 @@ def set_seed(seed: int) -> None:
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
+
 def get_device(config: dict) -> torch.device:
     """
     Decide training device.
@@ -79,11 +81,10 @@ def get_device(config: dict) -> torch.device:
 
     if device_name == "auto":
 
-        return torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu"
-        )
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     return torch.device(device_name)
+
 
 def build_loss(config: dict) -> nn.Module:
     """
@@ -95,10 +96,9 @@ def build_loss(config: dict) -> nn.Module:
     if loss_name == "CrossEntropyLoss":
         return nn.CrossEntropyLoss()
 
-    raise ValueError(
-        f"Unsupported Loss: {loss_name}"
-    )
-    
+    raise ValueError(f"Unsupported Loss: {loss_name}")
+
+
 def build_optimizer(
     model: nn.Module,
     config: dict,
@@ -152,9 +152,8 @@ def build_optimizer(
             weight_decay=weight_decay,
         )
 
-    raise ValueError(
-        f"Unsupported optimizer: {optimizer_name}"
-    )
+    raise ValueError(f"Unsupported optimizer: {optimizer_name}")
+
 
 def build_scheduler(
     optimizer: optim.Optimizer,
@@ -194,9 +193,7 @@ def build_scheduler(
             ),
         )
 
-    raise ValueError(
-        f"Unsupported scheduler: {scheduler_name}"
-    )
+    raise ValueError(f"Unsupported scheduler: {scheduler_name}")
 
 
 def save_checkpoint(
@@ -214,19 +211,14 @@ def save_checkpoint(
     if not checkpoint_cfg["enabled"]:
         return None
 
-    save_dir = Path(
-        checkpoint_cfg["save_dir"]
-    )
+    save_dir = Path(checkpoint_cfg["save_dir"])
 
     save_dir.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    checkpoint_path = (
-        save_dir /
-        checkpoint_cfg["filename"]
-    )
+    checkpoint_path = save_dir / checkpoint_cfg["filename"]
 
     torch.save(
         {
@@ -237,11 +229,10 @@ def save_checkpoint(
         checkpoint_path,
     )
 
-    print(
-        f"Checkpoint saved: {checkpoint_path}"
-    )
+    print(f"Checkpoint saved: {checkpoint_path}")
 
     return checkpoint_path
+
 
 class EarlyStopping:
     """
@@ -272,10 +263,7 @@ class EarlyStopping:
             self.best_score = validation_accuracy
             return
 
-        improvement = (
-            validation_accuracy
-            - self.best_score
-        )
+        improvement = validation_accuracy - self.best_score
 
         if improvement > self.min_delta:
 
@@ -286,10 +274,7 @@ class EarlyStopping:
 
             self.counter += 1
 
-            print(
-                f"EarlyStopping Counter: "
-                f"{self.counter}/{self.patience}"
-            )
+            print(f"EarlyStopping Counter: " f"{self.counter}/{self.patience}")
 
             if self.counter >= self.patience:
 
@@ -337,12 +322,11 @@ def train_one_epoch(
     # -----------------------------------------
     # Smoke Training Configuration
     # -----------------------------------------
-    
+
     smoke_config = config.get("smoke", {})
 
     smoke_enabled = smoke_config.get("enabled", False)
     train_batches = smoke_config.get("train_batches", 0)
-    
 
     # -----------------------------------------
     # Running statistics
@@ -363,10 +347,7 @@ def train_one_epoch(
         # -----------------------------------------
 
         if smoke_enabled and batch_idx + 1 >= train_batches:
-            print(
-                f"Smoke mode: stopping training after "
-                f"{train_batches} batches."
-            )
+            print(f"Smoke mode: stopping training after " f"{train_batches} batches.")
 
             break
 
@@ -399,9 +380,7 @@ def train_one_epoch(
 
         predictions = outputs.argmax(dim=1)
 
-        correct_predictions += (
-            predictions == labels
-        ).sum().item()
+        correct_predictions += (predictions == labels).sum().item()
 
         total_samples += batch_size
 
@@ -410,9 +389,7 @@ def train_one_epoch(
     # -----------------------------------------
     epoch_loss = running_loss / total_samples
 
-    epoch_accuracy = (
-        correct_predictions / total_samples
-    ) * 100.0
+    epoch_accuracy = (correct_predictions / total_samples) * 100.0
 
     metrics = {
         "loss": epoch_loss,
@@ -482,9 +459,7 @@ def validate_one_epoch(
         for batch_idx, (images, labels) in enumerate(dataloader):
 
             if smoke_enabled and batch_idx + 1 >= val_batches:
-                print(
-                    f"Smoke mode enabled. Stopping after {val_batches} batches."
-                )
+                print(f"Smoke mode enabled. Stopping after {val_batches} batches.")
                 break
 
             images = images.to(device)
@@ -501,27 +476,21 @@ def validate_one_epoch(
 
             predictions = outputs.argmax(dim=1)
 
-            correct_predictions += (
-                predictions == labels
-            ).sum().item()
+            correct_predictions += (predictions == labels).sum().item()
 
             total_samples += batch_size
 
     epoch_loss = running_loss / total_samples
 
-    epoch_accuracy = (
-        correct_predictions / total_samples
-    ) * 100.0
+    epoch_accuracy = (correct_predictions / total_samples) * 100.0
 
     metrics = {
-
         "loss": epoch_loss,
-
         "accuracy": epoch_accuracy,
-
     }
 
     return metrics
+
 
 def main():
     """
@@ -540,13 +509,9 @@ def main():
 
     config = load_config(args.config)
 
-    ml_logger = MLFlowLogger(
-        experiment_name="Image Classification"
-    )
+    ml_logger = MLFlowLogger(experiment_name="Image Classification")
 
-    ml_logger.start_run(
-        run_name=config["model"].get("name", "SimpleCNN")
-    )
+    ml_logger.start_run(run_name=config["model"].get("name", "SimpleCNN"))
 
     try:
         seed = config["training"]["seed"]
@@ -574,24 +539,18 @@ def main():
         print(f"Training batches   : {len(train_loader)}")
         print(f"Validation batches : {len(validation_loader)}")
 
-        model = SimpleCNN(
-            num_classes=len(class_names)
-        )
+        model = SimpleCNN(num_classes=len(class_names))
         model.to(device)
         print("Model Created Successfully")
 
         criterion = build_loss(config)
-        print(
-            f"Loss : {config['loss']['name']}"
-        )
+        print(f"Loss : {config['loss']['name']}")
 
         optimizer = build_optimizer(
             model,
             config,
         )
-        print(
-            f"Optimizer : {config['optimizer']['name']}"
-        )
+        print(f"Optimizer : {config['optimizer']['name']}")
 
         scheduler = build_scheduler(
             optimizer=optimizer,
@@ -599,9 +558,7 @@ def main():
         )
 
         if scheduler is not None:
-            print(
-                f"Scheduler : {config['scheduler']['name']}"
-            )
+            print(f"Scheduler : {config['scheduler']['name']}")
         else:
             print("Scheduler : Disabled")
 
@@ -648,9 +605,7 @@ def main():
         print("=" * 70)
 
         for epoch in range(epochs):
-            print(
-                f"\nEpoch [{epoch + 1}/{epochs}]"
-            )
+            print(f"\nEpoch [{epoch + 1}/{epochs}]")
 
             train_metrics = train_one_epoch(
                 model=model,
@@ -674,21 +629,11 @@ def main():
 
             current_lr = optimizer.param_groups[0]["lr"]
 
-            history["train_loss"].append(
-                train_metrics["loss"]
-            )
-            history["train_accuracy"].append(
-                train_metrics["accuracy"]
-            )
-            history["validation_loss"].append(
-                validation_metrics["loss"]
-            )
-            history["validation_accuracy"].append(
-                validation_metrics["accuracy"]
-            )
-            history["learning_rate"].append(
-                current_lr
-            )
+            history["train_loss"].append(train_metrics["loss"])
+            history["train_accuracy"].append(train_metrics["accuracy"])
+            history["validation_loss"].append(validation_metrics["loss"])
+            history["validation_accuracy"].append(validation_metrics["accuracy"])
+            history["learning_rate"].append(current_lr)
 
             ml_logger.log_metrics(
                 {
@@ -701,13 +646,8 @@ def main():
                 step=epoch + 1,
             )
 
-            if (
-                validation_metrics["accuracy"]
-                > best_validation_accuracy
-            ):
-                best_validation_accuracy = (
-                    validation_metrics["accuracy"]
-                )
+            if validation_metrics["accuracy"] > best_validation_accuracy:
+                best_validation_accuracy = validation_metrics["accuracy"]
 
                 checkpoint_path = save_checkpoint(
                     model=model,
@@ -722,26 +662,14 @@ def main():
                         artifact_dir="checkpoints",
                     )
 
-            print(
-                f"Train Loss      : {train_metrics['loss']:.4f}"
-            )
-            print(
-                f"Train Accuracy  : {train_metrics['accuracy']:.2f}%"
-            )
-            print(
-                f"Validation Loss : {validation_metrics['loss']:.4f}"
-            )
-            print(
-                f"Validation Acc  : {validation_metrics['accuracy']:.2f}%"
-            )
-            print(
-                f"Learning Rate   : {current_lr:.8f}"
-            )
+            print(f"Train Loss      : {train_metrics['loss']:.4f}")
+            print(f"Train Accuracy  : {train_metrics['accuracy']:.2f}%")
+            print(f"Validation Loss : {validation_metrics['loss']:.4f}")
+            print(f"Validation Acc  : {validation_metrics['accuracy']:.2f}%")
+            print(f"Learning Rate   : {current_lr:.8f}")
 
             if early_stopping is not None:
-                early_stopping(
-                    validation_metrics["accuracy"]
-                )
+                early_stopping(validation_metrics["accuracy"])
 
                 if early_stopping.stop_training:
                     print("\nEarly stopping triggered.")
@@ -755,23 +683,19 @@ def main():
             args.config,
             artifact_dir="config",
         )
-        print(
-            f"Best Validation Accuracy : "
-            f"{best_validation_accuracy:.2f}%"
-        )
+        print(f"Best Validation Accuracy : " f"{best_validation_accuracy:.2f}%")
 
         return history
     finally:
         ml_logger.end_run()
+
 
 def parse_arguments():
     """
     Parse command-line arguments.
     """
 
-    parser = argparse.ArgumentParser(
-        description="Production Training Pipeline"
-    )
+    parser = argparse.ArgumentParser(description="Production Training Pipeline")
 
     parser.add_argument(
         "--config",
@@ -781,6 +705,7 @@ def parse_arguments():
     )
 
     return parser.parse_args()
+
 
 if __name__ == "__main__":
 

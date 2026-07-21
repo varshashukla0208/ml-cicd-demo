@@ -8,10 +8,10 @@ import torch
 
 from training.train import save_checkpoint
 
-
 # ---------------------------------------------------------
 # Save Checkpoint
 # ---------------------------------------------------------
+
 
 def test_save_checkpoint(
     model,
@@ -30,10 +30,7 @@ def test_save_checkpoint(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     assert checkpoint_path.exists()
 
@@ -41,6 +38,7 @@ def test_save_checkpoint(
 # ---------------------------------------------------------
 # Load Checkpoint
 # ---------------------------------------------------------
+
 
 def test_load_checkpoint(
     model,
@@ -59,10 +57,7 @@ def test_load_checkpoint(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     checkpoint = torch.load(
         checkpoint_path,
@@ -75,6 +70,7 @@ def test_load_checkpoint(
 # ---------------------------------------------------------
 # Checkpoint Keys
 # ---------------------------------------------------------
+
 
 def test_checkpoint_keys(
     model,
@@ -93,10 +89,7 @@ def test_checkpoint_keys(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     checkpoint = torch.load(
         checkpoint_path,
@@ -113,6 +106,7 @@ def test_checkpoint_keys(
 # ---------------------------------------------------------
 # Epoch
 # ---------------------------------------------------------
+
 
 def test_checkpoint_epoch(
     model,
@@ -131,10 +125,7 @@ def test_checkpoint_epoch(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     checkpoint = torch.load(
         checkpoint_path,
@@ -147,6 +138,7 @@ def test_checkpoint_epoch(
 # ---------------------------------------------------------
 # Validation Accuracy
 # ---------------------------------------------------------
+
 
 def test_validation_accuracy(
     model,
@@ -165,10 +157,7 @@ def test_validation_accuracy(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     checkpoint = torch.load(
         checkpoint_path,
@@ -181,6 +170,7 @@ def test_validation_accuracy(
 # ---------------------------------------------------------
 # Restore Model
 # ---------------------------------------------------------
+
 
 def test_restore_model(
     model,
@@ -197,29 +187,21 @@ def test_restore_model(
         config=config,
     )
 
-    original = {
-        k: v.clone()
-        for k, v in model.state_dict().items()
-    }
+    original = {k: v.clone() for k, v in model.state_dict().items()}
 
     for param in model.parameters():
         param.data.zero_()
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     checkpoint = torch.load(
         checkpoint_path,
         map_location="cpu",
     )
 
-    model.load_state_dict(
-        checkpoint["model_state_dict"]
-    )
+    model.load_state_dict(checkpoint["model_state_dict"])
 
     restored = model.state_dict()
 
@@ -234,6 +216,7 @@ def test_restore_model(
 # ---------------------------------------------------------
 # File Exists
 # ---------------------------------------------------------
+
 
 def test_checkpoint_exists(
     model,
@@ -252,10 +235,7 @@ def test_checkpoint_exists(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     assert checkpoint_path.exists()
 
@@ -263,6 +243,7 @@ def test_checkpoint_exists(
 # ---------------------------------------------------------
 # File Not Empty
 # ---------------------------------------------------------
+
 
 def test_checkpoint_not_empty(
     model,
@@ -281,9 +262,6 @@ def test_checkpoint_not_empty(
 
     checkpoint_cfg = config["checkpoint"]
 
-    checkpoint_path = (
-        Path(checkpoint_cfg["save_dir"])
-        / checkpoint_cfg["filename"]
-    )
+    checkpoint_path = Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     assert checkpoint_path.stat().st_size > 0

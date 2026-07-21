@@ -13,10 +13,10 @@ from training.train import (
     validate_one_epoch,
 )
 
-
 # ---------------------------------------------------------
 # Loss Function
 # ---------------------------------------------------------
+
 
 def test_build_loss(config):
     """
@@ -35,6 +35,7 @@ def test_build_loss(config):
 # ---------------------------------------------------------
 # Optimizer
 # ---------------------------------------------------------
+
 
 def test_build_optimizer(
     model,
@@ -76,6 +77,7 @@ def test_build_optimizer(
 # One Training Epoch
 # ---------------------------------------------------------
 
+
 def test_train_one_epoch(
     model,
     train_loader,
@@ -115,6 +117,7 @@ def test_train_one_epoch(
 # Train Loss
 # ---------------------------------------------------------
 
+
 def test_train_loss_positive(
     model,
     train_loader,
@@ -149,6 +152,7 @@ def test_train_loss_positive(
 # ---------------------------------------------------------
 # Train Accuracy
 # ---------------------------------------------------------
+
 
 def test_train_accuracy_range(
     model,
@@ -186,6 +190,7 @@ def test_train_accuracy_range(
 # Validation Epoch
 # ---------------------------------------------------------
 
+
 def test_validate_one_epoch(
     model,
     validation_loader,
@@ -219,6 +224,7 @@ def test_validate_one_epoch(
 # Validation Loss
 # ---------------------------------------------------------
 
+
 def test_validation_loss_positive(
     model,
     validation_loader,
@@ -247,6 +253,7 @@ def test_validation_loss_positive(
 # ---------------------------------------------------------
 # Validation Accuracy
 # ---------------------------------------------------------
+
 
 def test_validation_accuracy_range(
     model,
@@ -278,6 +285,7 @@ def test_validation_accuracy_range(
 # Parameters Updated
 # ---------------------------------------------------------
 
+
 def test_parameters_updated(
     model,
     train_loader,
@@ -298,9 +306,7 @@ def test_parameters_updated(
         config=config,
     )
 
-    before = copy.deepcopy(
-        model.state_dict()
-    )
+    before = copy.deepcopy(model.state_dict())
 
     train_one_epoch(
         model=model,
@@ -313,10 +319,7 @@ def test_parameters_updated(
 
     after = model.state_dict()
 
-    updated = any(
-        not torch.equal(before[key], after[key])
-        for key in before
-    )
+    updated = any(not torch.equal(before[key], after[key]) for key in before)
 
     assert updated
 
@@ -324,6 +327,7 @@ def test_parameters_updated(
 # ---------------------------------------------------------
 # Optimizer State
 # ---------------------------------------------------------
+
 
 def test_optimizer_has_param_groups(
     model,
@@ -339,14 +343,13 @@ def test_optimizer_has_param_groups(
         config=config,
     )
 
-    assert len(
-        optimizer.param_groups
-    ) > 0
+    assert len(optimizer.param_groups) > 0
 
 
 # ---------------------------------------------------------
 # Model Train Mode
 # ---------------------------------------------------------
+
 
 def test_model_train_mode(
     model,
@@ -383,6 +386,7 @@ def test_model_train_mode(
 # ---------------------------------------------------------
 # Model Eval Mode
 # ---------------------------------------------------------
+
 
 def test_model_eval_mode(
     model,

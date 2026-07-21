@@ -95,7 +95,9 @@ class ModelRegistry:
         except Exception:
             return False
 
-        return any(artifact.path.replace("\\", "/") == artifact_path for artifact in artifacts)
+        return any(
+            artifact.path.replace("\\", "/") == artifact_path for artifact in artifacts
+        )
 
     def _get_run_metric(
         self,
@@ -245,9 +247,7 @@ class ModelRegistry:
             max_results=max_results,
         )
 
-        runs_with_metric = [
-            run for run in runs if metric_name in run.data.metrics
-        ]
+        runs_with_metric = [run for run in runs if metric_name in run.data.metrics]
 
         if artifact_path:
             runs_with_metric = [

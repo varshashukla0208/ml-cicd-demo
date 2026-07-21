@@ -11,10 +11,10 @@ from training.evaluate import (
     evaluate,
 )
 
-
 # ---------------------------------------------------------
 # Load Checkpoint
 # ---------------------------------------------------------
+
 
 def test_load_checkpoint(
     model,
@@ -45,6 +45,7 @@ def test_load_checkpoint(
 # Model State Dict
 # ---------------------------------------------------------
 
+
 def test_model_state_dict_loaded(
     model,
     config,
@@ -67,14 +68,13 @@ def test_model_state_dict_loaded(
         device=device,
     )
 
-    assert len(
-        loaded_model.state_dict()
-    ) > 0
+    assert len(loaded_model.state_dict()) > 0
 
 
 # ---------------------------------------------------------
 # Evaluate
 # ---------------------------------------------------------
+
 
 def test_evaluate(
     model,
@@ -120,6 +120,7 @@ def test_evaluate(
 # Metrics Keys
 # ---------------------------------------------------------
 
+
 def test_metrics_keys(
     model,
     test_loader,
@@ -161,6 +162,7 @@ def test_metrics_keys(
 # Loss
 # ---------------------------------------------------------
 
+
 def test_loss_positive(
     model,
     test_loader,
@@ -199,6 +201,7 @@ def test_loss_positive(
 # ---------------------------------------------------------
 # Accuracy
 # ---------------------------------------------------------
+
 
 def test_accuracy_range(
     model,
@@ -240,6 +243,7 @@ def test_accuracy_range(
 # Evaluation Mode
 # ---------------------------------------------------------
 
+
 def test_model_eval_mode(
     model,
     test_loader,
@@ -279,6 +283,7 @@ def test_model_eval_mode(
 # Finite Metrics
 # ---------------------------------------------------------
 
+
 def test_metrics_are_finite(
     model,
     test_loader,
@@ -311,18 +316,15 @@ def test_metrics_are_finite(
         device=device,
     )
 
-    assert torch.isfinite(
-        torch.tensor(metrics["loss"])
-    )
+    assert torch.isfinite(torch.tensor(metrics["loss"]))
 
-    assert torch.isfinite(
-        torch.tensor(metrics["accuracy"])
-    )
+    assert torch.isfinite(torch.tensor(metrics["accuracy"]))
 
 
 # ---------------------------------------------------------
 # Evaluation Returns Float
 # ---------------------------------------------------------
+
 
 def test_metrics_type(
     model,

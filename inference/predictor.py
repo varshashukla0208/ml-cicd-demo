@@ -55,9 +55,7 @@ class Predictor:
             image_size=config["dataset"]["image_size"]
         )
 
-        self.postprocessor = PostProcessor(
-            class_names=config["classes"]
-        )
+        self.postprocessor = PostProcessor(class_names=config["classes"])
 
     # ======================================================
     # Predict
@@ -101,29 +99,20 @@ class Predictor:
         # Postprocess
         # -----------------------------------------------
 
-        result = self.postprocessor.process(
-            outputs
-        )
+        result = self.postprocessor.process(outputs)
 
         # -----------------------------------------------
         # Inference latency
         # -----------------------------------------------
 
-        inference_time = (
-            time.perf_counter()
-            - start_time
-        ) * 1000.0
+        inference_time = (time.perf_counter() - start_time) * 1000.0
 
         return PredictionResponse(
-
             predicted_class=result.predicted_class,
-
             confidence=result.confidence,
-
             inference_time_ms=round(
                 inference_time,
                 2,
             ),
-
             model_version="1.0.0",
         )

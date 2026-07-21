@@ -28,7 +28,6 @@ import torch.nn as nn
 
 from models.cnn import SimpleCNN
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -56,11 +55,7 @@ class ModelLoader:
 
         if device_name == "auto":
 
-            return torch.device(
-                "cuda"
-                if torch.cuda.is_available()
-                else "cpu"
-            )
+            return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         return torch.device(device_name)
 
@@ -75,9 +70,7 @@ class ModelLoader:
 
         num_classes = self.config["model"]["num_classes"]
 
-        model = SimpleCNN(
-            num_classes=num_classes
-        )
+        model = SimpleCNN(num_classes=num_classes)
 
         return model
 
@@ -92,10 +85,7 @@ class ModelLoader:
 
         checkpoint_cfg = self.config["checkpoint"]
 
-        return (
-            Path(checkpoint_cfg["save_dir"])
-            / checkpoint_cfg["filename"]
-        )
+        return Path(checkpoint_cfg["save_dir"]) / checkpoint_cfg["filename"]
 
     # =======================================================
     # Load Model
@@ -119,9 +109,7 @@ class ModelLoader:
 
         if not checkpoint_path.exists():
 
-            raise FileNotFoundError(
-                f"Checkpoint not found:\n{checkpoint_path}"
-            )
+            raise FileNotFoundError(f"Checkpoint not found:\n{checkpoint_path}")
 
         logger.info(
             "Loading checkpoint: %s",
@@ -135,21 +123,15 @@ class ModelLoader:
 
         if "model_state_dict" not in checkpoint:
 
-            raise KeyError(
-                "model_state_dict missing from checkpoint."
-            )
+            raise KeyError("model_state_dict missing from checkpoint.")
 
-        model.load_state_dict(
-            checkpoint["model_state_dict"]
-        )
+        model.load_state_dict(checkpoint["model_state_dict"])
 
         model.to(self.device)
 
         model.eval()
 
-        logger.info(
-            "Model loaded successfully."
-        )
+        logger.info("Model loaded successfully.")
 
         logger.info(
             "Inference Device : %s",

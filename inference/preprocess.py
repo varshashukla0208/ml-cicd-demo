@@ -50,7 +50,6 @@ class ImagePreprocessor:
                         image_size,
                     )
                 ),
-
                 transforms.ToTensor(),
             ]
         )
@@ -67,9 +66,7 @@ class ImagePreprocessor:
         Decode uploaded image.
         """
 
-        image = Image.open(
-            BytesIO(image_bytes)
-        )
+        image = Image.open(BytesIO(image_bytes))
 
         image = image.convert("RGB")
 
@@ -118,13 +115,9 @@ class ImagePreprocessor:
                 (1, 3, 128, 128)
         """
 
-        image = self._load_image(
-            image_bytes
-        )
+        image = self._load_image(image_bytes)
 
-        tensor = self._transform(
-            image
-        )
+        tensor = self._transform(image)
 
         tensor = tensor.unsqueeze(0)
 

@@ -34,6 +34,7 @@ _client = MlflowClient()
 # Client
 # ---------------------------------------------------------------------
 
+
 def get_client() -> MlflowClient:
     """
     Return the singleton MLflow client.
@@ -49,6 +50,7 @@ def get_client() -> MlflowClient:
 # ---------------------------------------------------------------------
 # Model Existence
 # ---------------------------------------------------------------------
+
 
 def registered_model_exists(model_name: str = MODEL_NAME) -> bool:
     """
@@ -74,6 +76,7 @@ def registered_model_exists(model_name: str = MODEL_NAME) -> bool:
 # Registered Model
 # ---------------------------------------------------------------------
 
+
 def get_registered_model(
     model_name: str = MODEL_NAME,
 ) -> RegisteredModel:
@@ -89,14 +92,13 @@ def get_registered_model(
         return _client.get_registered_model(model_name)
 
     except Exception as e:
-        raise ModelNotFoundError(
-            f"Registered model '{model_name}' not found."
-        ) from e
+        raise ModelNotFoundError(f"Registered model '{model_name}' not found.") from e
 
 
 # ---------------------------------------------------------------------
 # List Registered Models
 # ---------------------------------------------------------------------
+
 
 def list_registered_models() -> List[RegisteredModel]:
     """
@@ -113,6 +115,7 @@ def list_registered_models() -> List[RegisteredModel]:
 # ---------------------------------------------------------------------
 # Search Models
 # ---------------------------------------------------------------------
+
 
 def search_registered_models(
     filter_string: Optional[str] = None,
@@ -132,14 +135,13 @@ def search_registered_models(
     if filter_string is None:
         return list(_client.search_registered_models())
 
-    return list(
-        _client.search_registered_models(filter_string=filter_string)
-    )
+    return list(_client.search_registered_models(filter_string=filter_string))
 
 
 # ---------------------------------------------------------------------
 # Model Versions
 # ---------------------------------------------------------------------
+
 
 def get_model_versions(
     model_name: str = MODEL_NAME,
@@ -153,13 +155,9 @@ def get_model_versions(
     """
 
     if not registered_model_exists(model_name):
-        raise ModelNotFoundError(
-            f"Model '{model_name}' does not exist."
-        )
+        raise ModelNotFoundError(f"Model '{model_name}' does not exist.")
 
-    versions = _client.search_model_versions(
-        f"name='{model_name}'"
-    )
+    versions = _client.search_model_versions(f"name='{model_name}'")
 
     return sorted(
         versions,
@@ -170,6 +168,7 @@ def get_model_versions(
 # ---------------------------------------------------------------------
 # Latest Version
 # ---------------------------------------------------------------------
+
 
 def get_latest_version(
     model_name: str = MODEL_NAME,
@@ -194,6 +193,7 @@ def get_latest_version(
 # Specific Version
 # ---------------------------------------------------------------------
 
+
 def get_model_version(
     model_name: str,
     version: int,
@@ -213,14 +213,13 @@ def get_model_version(
         )
 
     except Exception as e:
-        raise VersionNotFoundError(
-            f"Version {version} not found."
-        ) from e
+        raise VersionNotFoundError(f"Version {version} not found.") from e
 
 
 # ---------------------------------------------------------------------
 # Latest Versions Per Stage
 # ---------------------------------------------------------------------
+
 
 def get_latest_versions(
     model_name: str = MODEL_NAME,
@@ -242,6 +241,7 @@ def get_latest_versions(
 # ---------------------------------------------------------------------
 # Get Version By Stage
 # ---------------------------------------------------------------------
+
 
 def get_stage_version(
     model_name: str,
@@ -278,6 +278,7 @@ def get_stage_version(
 # Count Versions
 # ---------------------------------------------------------------------
 
+
 def count_versions(
     model_name: str = MODEL_NAME,
 ) -> int:
@@ -291,6 +292,7 @@ def count_versions(
 # ---------------------------------------------------------------------
 # Registry Summary
 # ---------------------------------------------------------------------
+
 
 def registry_summary(
     model_name: str = MODEL_NAME,
@@ -331,15 +333,9 @@ def registry_summary(
         "description": model.description,
         "creation_timestamp": model.creation_timestamp,
         "last_updated_timestamp": model.last_updated_timestamp,
-        "latest_version": None
-        if latest is None
-        else latest.version,
-        "production_version": None
-        if production is None
-        else production.version,
-        "staging_version": None
-        if staging is None
-        else staging.version,
+        "latest_version": None if latest is None else latest.version,
+        "production_version": None if production is None else production.version,
+        "staging_version": None if staging is None else staging.version,
         "archived_versions": archived,
         "total_versions": count_versions(model_name),
     }
@@ -348,6 +344,7 @@ def registry_summary(
 # ---------------------------------------------------------------------
 # Pretty Print
 # ---------------------------------------------------------------------
+
 
 def print_registry_summary(
     model_name: str = MODEL_NAME,

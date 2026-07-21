@@ -41,7 +41,6 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 
-
 # ============================================================
 # Project Paths
 # ============================================================
@@ -58,6 +57,7 @@ CHECKPOINT_DIR = PROJECT_ROOT / "checkpoints"
 # ============================================================
 # Settings
 # ============================================================
+
 
 class Settings(BaseSettings):
     """
@@ -80,8 +80,7 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
 
     APP_DESCRIPTION: str = (
-        "Production-ready FastAPI service "
-        "for Image Classification."
+        "Production-ready FastAPI service " "for Image Classification."
     )
 
     APP_ENV: str = "development"
@@ -131,9 +130,7 @@ class Settings(BaseSettings):
 
     MLFLOW_MODEL_URI: str = ""
 
-    REGISTRY_MODEL_URI: str = (
-        "models:/ImageClassifier@production"
-    )
+    REGISTRY_MODEL_URI: str = "models:/ImageClassifier@production"
 
     # ========================================================
     # MLflow
@@ -141,9 +138,7 @@ class Settings(BaseSettings):
 
     MLFLOW_TRACKING_URI: str = "sqlite:///mlflow.db"
 
-    MLFLOW_EXPERIMENT_NAME: str = (
-        "ImageClassification"
-    )
+    MLFLOW_EXPERIMENT_NAME: str = "ImageClassification"
 
     # ========================================================
     # Logging
@@ -151,12 +146,7 @@ class Settings(BaseSettings):
 
     LOG_LEVEL: str = "INFO"
 
-    LOG_FORMAT: str = (
-        "%(asctime)s | "
-        "%(levelname)s | "
-        "%(name)s | "
-        "%(message)s"
-    )
+    LOG_FORMAT: str = "%(asctime)s | " "%(levelname)s | " "%(name)s | " "%(message)s"
 
     # ========================================================
     # Render
@@ -202,6 +192,7 @@ class Settings(BaseSettings):
 # ============================================================
 # Cached Singleton
 # ============================================================
+
 
 @lru_cache
 def get_settings() -> Settings:

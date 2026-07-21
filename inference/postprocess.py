@@ -26,10 +26,10 @@ from dataclasses import dataclass
 import torch
 import torch.nn.functional as F
 
-
 # ==========================================================
 # Prediction Result
 # ==========================================================
+
 
 @dataclass(frozen=True)
 class PredictionResult:
@@ -47,6 +47,7 @@ class PredictionResult:
 # ==========================================================
 # Postprocessor
 # ==========================================================
+
 
 class PostProcessor:
     """
@@ -72,8 +73,7 @@ class PostProcessor:
         if outputs.ndim != 2:
 
             raise ValueError(
-                "Model output must have shape "
-                "(batch_size, num_classes)."
+                "Model output must have shape " "(batch_size, num_classes)."
             )
 
     # ======================================================
@@ -104,9 +104,7 @@ class PostProcessor:
 
         self._validate_output(outputs)
 
-        probabilities = self._probabilities(
-            outputs
-        )
+        probabilities = self._probabilities(outputs)
 
         confidence, prediction = torch.max(
             probabilities,
@@ -115,19 +113,10 @@ class PostProcessor:
 
         predicted_index = prediction.item()
 
-        predicted_class = (
-            self.class_names[
-                predicted_index
-            ]
-        )
+        predicted_class = self.class_names[predicted_index]
 
         return PredictionResult(
-
             predicted_class=predicted_class,
-
             predicted_index=predicted_index,
-
-            confidence=float(
-                confidence.item()
-            ),
+            confidence=float(confidence.item()),
         )

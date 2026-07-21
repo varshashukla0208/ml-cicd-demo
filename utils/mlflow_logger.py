@@ -15,8 +15,6 @@ Responsibilities
 Author: Varsha Shukla
 """
 
-
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -29,20 +27,20 @@ import os
 
 os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
 
+
 class MLFlowLogger:
     """
-    Wrapper around MLflow APIs.
+     Wrapper around MLflow APIs.
 
-    Example
-    -------
-   logger = MLFlowLogger(config["mlflow"])
+     Example
+     -------
+    logger = MLFlowLogger(config["mlflow"])
 
-    logger.start_run(run_name="CNN_Run_1")
-    logger.log_params({...})
-    logger.log_metric("train_loss", 0.35, step=1)
-    logger.end_run()
+     logger.start_run(run_name="CNN_Run_1")
+     logger.log_params({...})
+     logger.log_metric("train_loss", 0.35, step=1)
+     logger.end_run()
     """
-
 
     def __init__(
         self,
@@ -186,8 +184,6 @@ class MLFlowLogger:
         """
         return mlflow.active_run() is not None
 
-    
-
     def log_file(self, file_path: str, artifact_dir: str | None = None):
         path = Path(file_path)
 
@@ -195,4 +191,4 @@ class MLFlowLogger:
             mlflow.log_artifact(
                 str(path),
                 artifact_path=artifact_dir,
-            )    
+            )
