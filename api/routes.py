@@ -34,7 +34,7 @@ from api.schemas import (
 )
 
 from inference.predictor import Predictor
-
+from configs.settings import *
 # ==========================================================
 # Router
 # ==========================================================
@@ -102,8 +102,9 @@ async def version(
     """
 
     return VersionResponse(
-        api_version="1.0.0",
+        api_version=settings.APP_VERSION,
         model_version="1.0.0",
+        model_name=settings.MODEL_NAME,
     )
 
 
