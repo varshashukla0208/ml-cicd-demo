@@ -30,3 +30,8 @@ ruff
 # Configuration
 # ===========================
 pyyaml
+
+pillow
+python-multipart
+mlflow
+pydantic-settings>=2.0.0

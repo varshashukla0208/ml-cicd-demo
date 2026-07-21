@@ -129,3 +129,10 @@ Docker
 | `pytest tests/test_model.py`                       | Run one specific test file               |
 | `pytest tests/test_model.py -v`                    | Run one file with verbose output         |
 | `pytest tests/test_model.py::test_forward_pass -v` | Run one specific test function           |
+
+
+
+
+docker login -u varshashukla0208
+
+dckr_pat_vYrd-bxftmVhS_rBOxyJLsfOGVg

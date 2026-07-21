@@ -37,4 +37,7 @@ COPY . .
 # -------------------------------------------------------
 # Default command
 # -------------------------------------------------------
-CMD ["python", "-m", "training.train", "--config", "configs/smoke_train.yaml"]
+#CMD ["python", "-m", "training.train", "--config", "configs/smoke_train.yaml"] -- training pipeline
+
+
+CMD ["sh", "-c", "python -m uvicorn api.app:app --host 0.0.0.0 --port ${PORT:-8000}"]

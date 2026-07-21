@@ -1,0 +1,44 @@
+dataset:
+  root: dataset
+  image_size: 128
+  batch_size: 16
+  num_workers: 0
+
+model:
+  name: SimpleCNN
+  num_classes: 2
+
+training:
+  epochs: 20
+  device: auto
+  seed: 42
+
+optimizer:
+  name: Adam
+  lr: 0.001
+  weight_decay: 0.0001
+
+scheduler:
+  enabled: true
+  name: StepLR
+  step_size: 5
+  gamma: 0.1
+
+loss:
+  name: CrossEntropyLoss
+
+checkpoint:
+  enabled: true
+  save_dir: checkpoints
+  filename: best_model.pth
+
+early_stopping:
+  enabled: true
+  patience: 5
+
+logging:
+  print_every: 1
+
+classes:
+  - Cat
+  - Dog

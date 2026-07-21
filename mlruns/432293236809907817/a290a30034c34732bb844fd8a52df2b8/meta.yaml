@@ -1,0 +1,14 @@
+artifact_uri: file:C:/Users/shuklvar/Documents/Practice_CI_CD/mlruns/432293236809907817/a290a30034c34732bb844fd8a52df2b8/artifacts
+end_time: 1784556210979
+entry_point_name: ''
+experiment_id: '432293236809907817'
+lifecycle_stage: active
+run_id: a290a30034c34732bb844fd8a52df2b8
+run_name: SimpleCNN
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1784556203807
+status: 3
+tags: []
+user_id: shuklvar

@@ -1,0 +1,9 @@
+artifact_location: file:C:/Users/shuklvar/Documents/Practice_CI_CD/mlruns/432293236809907817
+creation_time: 1784556045061
+effective_trace_archival_retention: null
+experiment_id: '432293236809907817'
+last_update_time: 1784556045061
+lifecycle_stage: active
+name: Image Classification
+trace_location: null
+workspace: default
