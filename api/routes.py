@@ -35,6 +35,7 @@ from api.schemas import (
 
 from inference.predictor import Predictor
 from configs.settings import settings
+
 # ==========================================================
 # Router
 # ==========================================================
