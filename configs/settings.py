@@ -105,7 +105,7 @@ class Settings(BaseSettings):
     # API
     # ========================================================
 
-    API_PREFIX: str = "/api/v1"
+    API_PREFIX: str = "/"
 
     DOCS_URL: str = "/docs"
 

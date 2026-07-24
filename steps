@@ -136,3 +136,19 @@ Docker
 docker login -u varshashukla0208
 
 dckr_pat_vYrd-bxftmVhS_rBOxyJLsfOGVg
+
+go to : render.com 
+
+
+1st run this from project root :python -m mlflow ui --backend-store-uri sqlite:///mlflow.db
+
+then train.py
+
+then open url : http://127.0.0.1:5000/
+
+https://dashboard.render.com/
+
+go to this url:
+
+https://image-classification-api-latest.onrender.com
+https://image-classification-api-latest.onrender.com/docs#
