@@ -36,8 +36,10 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 from pydantic import Field
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 
@@ -86,6 +88,20 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
 
     DEBUG: bool = True
+
+    @field_validator("DEBUG", mode="before")
+    @classmethod
+    def parse_debug_flag(cls, value: Any) -> Any:
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+
+            if normalized in {"release", "prod", "production"}:
+                return False
+
+            if normalized in {"dev", "development"}:
+                return True
+
+        return value
 
     # ========================================================
     # Server

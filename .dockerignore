@@ -107,3 +107,13 @@ docs/_build/
 Dockerfile.old
 docker-compose.yml
 docker-compose.override.yml
+
+dataset/
+mlruns/
+mlflow.db
+saved_models/
+registry/
+logs/
+.pytest_cache/
+.ruff_cache/
+.venv/

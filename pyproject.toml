@@ -1,0 +1,23 @@
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+extend-exclude = '''
+/(
+    dataset
+  | mlruns
+  | saved_models
+  | registry
+  | checkpoints
+  | logs
+)/
+'''
+force-exclude = '''
+/(
+    dataset
+  | mlruns
+  | saved_models
+  | registry
+  | checkpoints
+  | logs
+)/
+'''

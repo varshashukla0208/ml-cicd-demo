@@ -52,8 +52,12 @@ htmlcov/
 # =========================
 # ML Models
 # =========================
+dataset/
 saved_models/
 checkpoints/
+mlruns/
+mlflow.db
+registry/
 
 # =========================
 # Temporary Files
