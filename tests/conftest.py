@@ -63,8 +63,21 @@ def device(config):
 @pytest.fixture(scope="session")
 def dataset_manager(config):
     """
-    Dataset manager.
+    Dataset manager. Automatically generates lightweight dummy dataset if
+    dataset directory is missing (e.g. in CI environments).
     """
+    root = Path(config["dataset"]["root"])
+    for split in ["train", "validation", "test"]:
+        for cls_name in ["cats", "dogs"]:
+            cls_dir = root / split / cls_name
+            if not cls_dir.exists() or not any(cls_dir.iterdir()):
+                cls_dir.mkdir(parents=True, exist_ok=True)
+                dummy_img_path = cls_dir / "dummy_sample.jpg"
+                if not dummy_img_path.exists():
+                    from PIL import Image
+
+                    img = Image.new("RGB", (128, 128), color=(100, 150, 200))
+                    img.save(dummy_img_path)
 
     return DatasetManager(
         dataset_root=config["dataset"]["root"],

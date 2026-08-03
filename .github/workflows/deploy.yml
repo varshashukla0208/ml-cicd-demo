@@ -7,124 +7,93 @@ on:
 
   workflow_dispatch:
 
-
 permissions:
   contents: read
-
 
 env:
   IMAGE_NAME: image-classification-api
 
-
 jobs:
-
   deploy:
-
     runs-on: ubuntu-latest
 
     steps:
-
       # ----------------------------------------------------
       # Checkout Repository
       # ----------------------------------------------------
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-
       # ----------------------------------------------------
-      # Setup Python
+      # Setup Python & Cache Pip Dependencies
       # ----------------------------------------------------
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
-
-
-      # ----------------------------------------------------
-      # Upgrade pip
-      # ----------------------------------------------------
-
-      - name: Upgrade pip
-        run: |
-          python -m pip install --upgrade pip
-
+          cache: "pip"
+          cache-dependency-path: "requirements.txt"
 
       # ----------------------------------------------------
-      # Install Dependencies
+      # Upgrade pip & Install Dependencies
       # ----------------------------------------------------
-
       - name: Install Dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-
 
       # ----------------------------------------------------
       # Run Ruff
       # ----------------------------------------------------
-
       - name: Run Ruff
         run: |
           ruff check .
 
-
       # ----------------------------------------------------
       # Run Black
       # ----------------------------------------------------
-
       - name: Check Formatting
         run: |
           black --check .
 
-
       # ----------------------------------------------------
       # Run Pytest
       # ----------------------------------------------------
-
       - name: Run Tests
         run: |
           pytest -v
 
+      # ----------------------------------------------------
+      # Set up Docker Buildx (Enables Layer Caching)
+      # ----------------------------------------------------
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       # ----------------------------------------------------
       # Login Docker Hub
       # ----------------------------------------------------
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-
       # ----------------------------------------------------
-      # Build Docker Image
+      # Build & Push Docker Image (with GHA Cache)
       # ----------------------------------------------------
-
-      - name: Build Docker Image
-        run: |
-          docker build \
-            -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest \
-            .
-
-
-      # ----------------------------------------------------
-      # Push Docker Image
-      # ----------------------------------------------------
-
-      - name: Push Docker Image
-        run: |
-          docker push \
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # ----------------------------------------------------
       # Deployment Complete
       # ----------------------------------------------------
-
       - name: Deployment Status
         run: |
-          echo "Docker image successfully pushed to Docker Hub."
-          echo "Render will automatically pull the latest image."
+          echo "Docker image successfully built, cached, and pushed to Docker Hub."
+          echo "Render will automatically pull the latest image."
