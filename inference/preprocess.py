@@ -51,6 +51,10 @@ class ImagePreprocessor:
                     )
                 ),
                 transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225],
+                ),
             ]
         )
 
@@ -66,11 +70,15 @@ class ImagePreprocessor:
         Decode uploaded image.
         """
 
-        image = Image.open(BytesIO(image_bytes))
-
-        image = image.convert("RGB")
-
-        return image
+        try:
+            image = Image.open(BytesIO(image_bytes))
+            image.verify()
+            # Reopen after verify because verify destroys image stream state in PIL
+            image = Image.open(BytesIO(image_bytes))
+            image = image.convert("RGB")
+            return image
+        except Exception as e:
+            raise ValueError(f"Invalid or corrupted image data: {str(e)}")
 
     # ======================================================
     # Transform Image

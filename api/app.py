@@ -24,14 +24,17 @@ Author:
 from __future__ import annotations
 
 import logging
+import time
+import uuid
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import router
 from configs.settings import settings
 from inference.model_loader import ModelLoader
+from inference.predictor import Predictor
 from training.train import load_config
 
 # ==========================================================
@@ -62,6 +65,8 @@ async def lifespan(app: FastAPI):
     logger.info("Environment : %s", settings.APP_ENV)
     logger.info("=" * 70)
 
+    app.state.start_time = time.time()
+
     try:
 
         # --------------------------------------------------
@@ -83,12 +88,23 @@ async def lifespan(app: FastAPI):
         logger.info("Inference model loaded.")
 
         # --------------------------------------------------
+        # Build Predictor Singleton
+        # --------------------------------------------------
+
+        predictor = Predictor(
+            model=model,
+            device=loader.inference_device,
+            config=config,
+        )
+
+        # --------------------------------------------------
         # Store objects inside FastAPI state
         # --------------------------------------------------
 
         app.state.config = config
         app.state.model = model
         app.state.device = loader.inference_device
+        app.state.predictor = predictor
 
         logger.info(
             "Inference Device : %s",
@@ -127,12 +143,28 @@ app = FastAPI(
 
 
 # ==========================================================
+# Request ID Middleware
+# ==========================================================
+
+
+@app.middleware("http")
+async def add_request_id_header(request: Request, call_next):
+    """
+    Attach X-Request-ID to incoming requests and outgoing responses.
+    """
+    request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+    response: Response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    return response
+
+
+# ==========================================================
 # CORS
 # ==========================================================
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

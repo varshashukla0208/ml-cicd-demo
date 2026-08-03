@@ -29,6 +29,7 @@ import torch.nn as nn
 
 from api.schemas import PredictionResponse
 
+from configs.settings import settings
 from inference.preprocess import ImagePreprocessor
 from inference.postprocess import PostProcessor
 
@@ -114,5 +115,5 @@ class Predictor:
                 inference_time,
                 2,
             ),
-            model_version="1.0.0",
+            model_version=settings.MODEL_VERSION,
         )

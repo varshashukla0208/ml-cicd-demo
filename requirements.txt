@@ -19,6 +19,7 @@ uvicorn
 # Testing
 # ===========================
 pytest
+httpx
 
 # ===========================
 # Code Quality

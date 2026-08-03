@@ -113,6 +113,10 @@ class Settings(BaseSettings):
 
     OPENAPI_URL: str = "/openapi.json"
 
+    MAX_UPLOAD_SIZE_MB: int = 10
+
+    ALLOWED_ORIGINS: list[str] = ["*"]
+
     # ========================================================
     # Model Loading
     # ========================================================

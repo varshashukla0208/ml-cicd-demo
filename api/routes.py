@@ -10,7 +10,7 @@ Responsibilities
 ----------------
 - Receive HTTP requests
 - Validate uploaded files
-- Call inference pipeline
+- Call inference pipeline (non-blocking)
 - Return structured JSON responses
 
 Author:
@@ -18,12 +18,19 @@ Author:
 ==========================================================
 """
 
+from __future__ import annotations
+
+import asyncio
+import time
+from typing import Optional
+
 from fastapi import (
     APIRouter,
     File,
     HTTPException,
     Request,
     UploadFile,
+    status,
 )
 
 from api.schemas import (
@@ -33,7 +40,6 @@ from api.schemas import (
     PredictionResponse,
 )
 
-from inference.predictor import Predictor
 from configs.settings import settings
 
 # ==========================================================
@@ -59,9 +65,9 @@ async def root():
     """
 
     return RootResponse(
-        application="Image Classification API",
+        application=settings.APP_NAME,
         status="running",
-        version="1.0.0",
+        version=settings.APP_VERSION,
     )
 
 
@@ -75,13 +81,33 @@ async def root():
     response_model=HealthResponse,
     tags=["Health"],
 )
-async def health():
+async def health(
+    request: Request,
+):
     """
-    Health check endpoint.
+    Health check endpoint with readiness check and uptime calculation.
     """
 
+    model_loaded = (
+        hasattr(request.app.state, "model") and request.app.state.model is not None
+    )
+
+    health_status = "healthy" if model_loaded else "unhealthy"
+
+    start_time: Optional[float] = getattr(request.app.state, "start_time", None)
+
+    if start_time:
+        uptime_seconds = int(time.time() - start_time)
+        hours = uptime_seconds // 3600
+        minutes = (uptime_seconds % 3600) // 60
+        seconds = uptime_seconds % 60
+        uptime_str = f"{hours}h {minutes}m {seconds}s"
+    else:
+        uptime_str = "unknown"
+
     return HealthResponse(
-        status="healthy",
+        status=health_status,
+        uptime=uptime_str,
     )
 
 
@@ -104,7 +130,7 @@ async def version(
 
     return VersionResponse(
         api_version=settings.APP_VERSION,
-        model_version="1.0.0",
+        model_version=settings.MODEL_VERSION,
         model_name=settings.MODEL_NAME,
     )
 
@@ -134,7 +160,7 @@ async def predict(
     if not file.filename:
 
         raise HTTPException(
-            status_code=400,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="Filename is missing.",
         )
 
@@ -154,7 +180,7 @@ async def predict(
     if not any(filename.endswith(ext) for ext in allowed_extensions):
 
         raise HTTPException(
-            status_code=400,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail=(
                 "Unsupported image format. "
                 "Supported formats: "
@@ -163,7 +189,7 @@ async def predict(
         )
 
     # ------------------------------------------------------
-    # Read uploaded image
+    # Read uploaded image payload
     # ------------------------------------------------------
 
     image_bytes = await file.read()
@@ -171,30 +197,58 @@ async def predict(
     if len(image_bytes) == 0:
 
         raise HTTPException(
-            status_code=400,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="Uploaded file is empty.",
         )
 
     # ------------------------------------------------------
-    # Run inference
+    # Validate file size limit
     # ------------------------------------------------------
 
-    predictor = Predictor(
-        model=request.app.state.model,
-        device=request.app.state.device,
-        config=request.app.state.config,
-    )
+    max_size_bytes = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
+
+    if len(image_bytes) > max_size_bytes:
+
+        raise HTTPException(
+            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+            detail=f"File size exceeds maximum allowed limit of {settings.MAX_UPLOAD_SIZE_MB}MB.",
+        )
+
+    # ------------------------------------------------------
+    # Retrieve Predictor Singleton from app.state
+    # ------------------------------------------------------
+
+    predictor = getattr(request.app.state, "predictor", None)
+
+    if predictor is None:
+
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Model predictor is not initialized or ready.",
+        )
+
+    # ------------------------------------------------------
+    # Run non-blocking inference via thread pool
+    # ------------------------------------------------------
 
     try:
 
-        prediction = predictor.predict(
+        prediction = await asyncio.to_thread(
+            predictor.predict,
             image_bytes=image_bytes,
+        )
+
+    except ValueError as ve:
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid image format: {str(ve)}",
         )
 
     except Exception as e:
 
         raise HTTPException(
-            status_code=500,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Inference failed: {str(e)}",
         )
 
