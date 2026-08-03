@@ -205,10 +205,10 @@ def test_restore_model(
 
     restored = model.state_dict()
 
-    for key in original:
+    for key, val in original.items():
 
         assert torch.equal(
-            original[key],
+            val,
             restored[key],
         )
 

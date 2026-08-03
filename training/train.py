@@ -531,7 +531,7 @@ def main():
         (
             train_loader,
             validation_loader,
-            test_loader,
+            _test_loader,
             class_names,
         ) = dataset.create_dataloaders()
 

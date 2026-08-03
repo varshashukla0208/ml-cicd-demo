@@ -78,7 +78,7 @@ class ImagePreprocessor:
             image = image.convert("RGB")
             return image
         except Exception as e:
-            raise ValueError(f"Invalid or corrupted image data: {str(e)}")
+            raise ValueError(f"Invalid or corrupted image data: {e!s}")
 
     # ======================================================
     # Transform Image

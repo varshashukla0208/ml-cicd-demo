@@ -36,6 +36,8 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-ignore = ["UP045", "B008", "BLE001"]
+select = ["E", "F", "W"]
+ignore = ["E501", "B008", "BLE001"]
+
 
 

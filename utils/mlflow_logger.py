@@ -17,13 +17,12 @@ Author: Varsha Shukla
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import mlflow
 import mlflow.pytorch
-
-import os
 
 os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
 
@@ -58,7 +57,7 @@ class MLFlowLogger:
     # Run Management
     ####################################################################
 
-    def start_run(self, run_name: Optional[str] = None) -> None:
+    def start_run(self, run_name: str | None = None) -> None:
         """
         Start a new MLflow run.
         """
@@ -77,7 +76,7 @@ class MLFlowLogger:
     def log_param(self, key: str, value: Any) -> None:
         mlflow.log_param(key, value)
 
-    def log_params(self, params: Dict[str, Any]) -> None:
+    def log_params(self, params: dict[str, Any]) -> None:
         mlflow.log_params(params)
 
     ####################################################################
@@ -88,14 +87,14 @@ class MLFlowLogger:
         self,
         key: str,
         value: float,
-        step: Optional[int] = None,
+        step: int | None = None,
     ) -> None:
         mlflow.log_metric(key, value, step=step)
 
     def log_metrics(
         self,
-        metrics: Dict[str, float],
-        step: Optional[int] = None,
+        metrics: dict[str, float],
+        step: int | None = None,
     ) -> None:
         mlflow.log_metrics(metrics, step=step)
 
@@ -106,7 +105,7 @@ class MLFlowLogger:
     def set_tag(self, key: str, value: str) -> None:
         mlflow.set_tag(key, value)
 
-    def set_tags(self, tags: Dict[str, str]) -> None:
+    def set_tags(self, tags: dict[str, str]) -> None:
         mlflow.set_tags(tags)
 
     ####################################################################
@@ -116,7 +115,7 @@ class MLFlowLogger:
     def log_artifact(
         self,
         artifact_path: str,
-        artifact_dir: Optional[str] = None,
+        artifact_dir: str | None = None,
     ) -> None:
         """
         Log a single file.
@@ -133,7 +132,7 @@ class MLFlowLogger:
     def log_artifacts(
         self,
         directory: str,
-        artifact_dir: Optional[str] = None,
+        artifact_dir: str | None = None,
     ) -> None:
         """
         Log an entire directory.

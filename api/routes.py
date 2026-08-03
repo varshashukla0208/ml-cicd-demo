@@ -242,14 +242,14 @@ async def predict(
 
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid image format: {str(ve)}",
+            detail=f"Invalid image format: {ve!s}",
         )
 
     except Exception as e:
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Inference failed: {str(e)}",
+            detail=f"Inference failed: {e!s}",
         )
 
     return prediction
