@@ -21,3 +21,20 @@ force-exclude = '''
   | logs
 )/
 '''
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+exclude = [
+    ".venv",
+    "dataset",
+    "mlruns",
+    "saved_models",
+    "registry",
+    "checkpoints",
+    "logs",
+]
+
+[tool.ruff.lint]
+ignore = ["UP045"]
+
