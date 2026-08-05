@@ -23,7 +23,7 @@ from training.dataset import DatasetManager
 def config():
     """
     Load configuration once for the
-    entire test session.
+    entire test session and isolate checkpoint filename for testing.
     """
 
     config_path = Path("configs/config.yaml")
@@ -31,6 +31,10 @@ def config():
     with open(config_path, "r") as file:
 
         config = yaml.safe_load(file)
+
+    # Isolate test checkpoints so test runs never overwrite production best_model.pth
+    if "checkpoint" in config:
+        config["checkpoint"]["filename"] = "test_checkpoint.pth"
 
     return config
 
